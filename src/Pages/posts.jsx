@@ -3,7 +3,7 @@ import axiosClient from '../api/axios'
 
 const Posts = () => {
     const [posts, setPosts] = useState([])
-    const [error, setError] = useState(null)
+    const [error, setError] = useState("")
 
     useEffect(()=>{
         getPosts();
@@ -14,7 +14,11 @@ const Posts = () => {
          .get('/posts')
          .then(res =>{
             setPosts(res.data)
+            // return axiosClient.get(`/posts/${postId}/comments?postId=${postId}`)
          })
+        //  .then(res => {
+        //     setComments(res.data)
+        //  })
          .catch( error => {
             setError(error.message)
          } )
@@ -29,6 +33,10 @@ const Posts = () => {
                 <p>Title : {post.title} </p>
                 <br />
                 <h5>{post.body}</h5>
+                
+                <h3>Comments: </h3> 
+                <hr />
+
             </li>
         ))}
       </ul>
