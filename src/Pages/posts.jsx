@@ -1,37 +1,41 @@
-import React, { useState, useEffect }  from 'react'
+
+import { useQuery } from '@tanstack/react-query'
 import axiosClient from '../api/axios'
 
+
+const fetchPosts = async () =>{
+  try{
+    const response = await axiosClient.get('/posts')
+    return response.data
+
+  } catch (error){
+    throw new Error('Cannot Fetch Posts')
+  }
+}
+
 const Posts = () => {
-    const [posts, setPosts] = useState([])
-    const [error, setError] = useState(null)
 
-    useEffect(()=>{
-        getPosts();
-    }, [])
+  const {isLoading, isError, data, error} = useQuery({
+    queryKey: ['posts'],
+    queryFn: fetchPosts,
+  })
 
-    const getPosts = () =>{
-        axiosClient
-         .get('/posts')
-         .then(res =>{
-            setPosts(res.data)
-         })
-         .catch( error => {
-            setError(error.message)
-         } )
-    }
+  if(isLoading){
+    return <span>Loading ...</span>
+  }
+
+  if(isError){
+    return <span>Error:{error.message}</span>
+  }
+ 
+
 
   return (
     <div>
-      <ul>
-        {error && <p>Error Message: {error}</p>}
-        {posts.map((post) => (
-            <li key = {post.id}>
-                <p>Title : {post.title} </p>
-                <br />
-                <h5>{post.body}</h5>
-            </li>
-        ))}
-      </ul>
+      <h1>All Posts</h1>
+      {data?.map((post) =>{
+        return <li key={post.id}>{post.title}</li>
+      })}
     </div>
   )
 }
