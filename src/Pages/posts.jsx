@@ -1,18 +1,13 @@
 
 import { useQuery } from '@tanstack/react-query'
 import axiosClient from '../api/axios'
-import { Card, CardHeader, CardBody, Box, Heading } from '@chakra-ui/react'
-import {
-  ListItem,
-  UnorderedList,
-} from '@chakra-ui/react'
+import {ListItem,UnorderedList, Spinner } from '@chakra-ui/react'
 
 
 const fetchPosts = async () =>{
   try{
     const response = await axiosClient.get('/posts')
     return response.data
-
   } catch (error){
     throw new Error('Cannot Fetch Posts')
   }
@@ -26,7 +21,7 @@ const Posts = () => {
   })
 
   if(isLoading){
-    return <span>Loading ...</span>
+    return <Spinner color='teal.500'/>
   }
 
   if(isError){
@@ -48,7 +43,6 @@ const Posts = () => {
             {post.body}
            </ListItem>
           </UnorderedList>
-        
         )
       })}
     </div>
